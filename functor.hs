@@ -11,5 +11,5 @@ main = do
   putStrLn $ show $ fmap (+2) p
   putStrLn $ show $ fmap (**2) p
   putStrLn $ show $ fmap ( (++) "flipped num = " . reverse . show) p
-  
+  putStrLn $ show $ ((++) "flipped num = " . reverse . show) p
   putStrLn "Functor"
