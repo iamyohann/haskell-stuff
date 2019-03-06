@@ -374,3 +374,39 @@ capitalize (x:xs) = (Char.toUpper x):xs
 
 capitalizeFirstLetter :: String -> Char
 capitalizeFirstLetter = (Char.toUpper . head)
+
+
+myAnd :: [Bool] -> Bool
+myAnd [] = True
+myAnd (x:xs) = if x == False then False else myAnd xs
+
+myOr :: [Bool] -> Bool
+myOr [] = False
+myOr (x:xs) = if x == True then True else myOr xs
+
+myAny :: (a -> Bool) -> [a] -> Bool
+myAny _ [] = False
+myAny fn (x:xs) = if (fn x) == True then True else myAny fn xs
+
+
+myElem :: (Eq a) => a -> [a] -> Bool
+myElem needle l = myAny (==needle) l
+
+myReverse :: [a] -> [a]
+myReverse [] = []
+myReverse [x] = [x]
+myReverse (x:y:xs) = myReverse xs ++ [y, x]
+
+squish :: [[a]] -> [a]
+squish [] = []
+squish [x] = x
+squish (x:xs) = x ++ (squish xs)
+
+squishMap :: (a -> [b]) -> [a] -> [b]
+squishMap _ [] = []
+squishMap fn [x] = fn x
+squishMap fn (x:xs) = (fn x) ++ (squishMap fn xs)
+
+squishAgain :: [[a]] -> [a]
+squishAgain = squishMap id
+
