@@ -1,5 +1,6 @@
 import Data.List (intersperse)
 import Data.Typeable
+import Data.Time
 import qualified Data.Char as Char
 
 foo :: Integer
@@ -123,17 +124,17 @@ type Day = Integer
 type Month = Integer
 type Year = Integer
 
-data Date = Date Year Month Day deriving (Eq, Show, Ord)
+-- data Date = Date Year Month Day deriving (Eq, Show, Ord)
 
-class DateStuff a where
-  maxD :: a
-  minD :: a
-  isValid :: a -> Bool
+-- class DateStuff a where
+--   maxD :: a
+--   minD :: a
+--   isValid :: a -> Bool
   
-instance DateStuff Date where
-  maxD = Date 2099 12 31
-  minD = Date 0 1 1
-  isValid d = minD < d && d < maxD
+-- instance DateStuff Date where
+--   maxD = Date 2099 12 31
+--   minD = Date 0 1 1
+--   isValid d = minD < d && d < maxD
 
 data Identity a = Identity a
 
@@ -410,3 +411,58 @@ squishMap fn (x:xs) = (fn x) ++ (squishMap fn xs)
 squishAgain :: [[a]] -> [a]
 squishAgain = squishMap id
 
+-- foldl (flip (*)) 1 [1..3]
+-- (((1 * 1) * 2) * 3)
+-- ((2 * 1) * 3)
+-- (3 * 2)
+
+
+data DatabaseItem = DbString String
+                  | DbNumber Integer
+                  | DbDate   UTCTime
+                    deriving (Eq, Ord, Show)
+
+theDatabase :: [DatabaseItem] 
+theDatabase =
+  [ DbDate (UTCTime
+  (fromGregorian 1911 5 1)
+  (secondsToDiffTime 34123)) , DbNumber 9001
+  , DbString "Hello, world!"
+  , DbDate (UTCTime
+              (fromGregorian 1921 5 1)
+              (secondsToDiffTime 34123))
+  ]
+
+filterDbDate :: [DatabaseItem] -> [UTCTime]
+filterDbDate l = [a | x@(DbDate a) <- l]
+
+data Lol a b c = Baz a b c
+
+
+data Price = Price Integer deriving (Show, Eq)
+
+data Manufacturer = Mini | Mazda | Tata deriving (Show, Eq)
+
+data Airline = PapuAir | CatapultsR'Us | TakeYourChancesUnited deriving (Show, Eq)
+
+data Vehicle = Car Manufacturer Price | Plane Airline deriving (Show, Eq)
+
+isCar :: Vehicle -> Bool
+isCar (Car _ _) = True
+isCar _ = False
+
+isPlane :: Vehicle -> Bool
+isPlane (Plane _) = True
+isPlane _ = False
+
+areCars :: [Vehicle] -> [Bool]
+areCars = map isCar
+
+getManu :: Vehicle -> Manufacturer
+getManu (Car m _) = m
+getManu _ = error "No manufacturer"
+
+data Example = SomeExample Integer deriving (Show)
+
+maxBound' :: (Bounded a, Num a) => a
+maxBound' = (abs maxBound) + (abs minBound)
